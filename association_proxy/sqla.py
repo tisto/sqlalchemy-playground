@@ -10,51 +10,51 @@ engine = create_engine('sqlite:///:memory:', echo=True)
 Base = declarative_base()
 
 
-class User(Base):
-    __tablename__ = 'user'
+class Book(Base):
+    __tablename__ = 'book'
     id = Column(Integer, primary_key=True)
     name = Column(String(64))
 
-    # proxy to 'user_keywords', instantiating UserKeyword
-    # assigning the new key to 'special_key', values to
-    # 'keyword'.
-    keywords = association_proxy(
-        'user_keywords',
-        'keyword',
-        creator=lambda k, v: UserKeyword(special_key=k, keyword=v)
+    # proxy to 'book_authors', instantiating BookAuthor
+    # assigning the new key to 'rank', values to
+    # 'author'.
+    authors = association_proxy(
+        'book_authors',
+        'author',
+        creator=lambda k, v: BookAuthor(rank=k, author=v)
     )
 
     def __init__(self, name):
         self.name = name
 
 
-class UserKeyword(Base):
-    __tablename__ = 'user_keyword'
-    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    keyword_id = Column(Integer, ForeignKey('keyword.id'), primary_key=True)
-    special_key = Column(String)
+class BookAuthor(Base):
+    __tablename__ = 'book_author'
+    book_id = Column(Integer, ForeignKey('book.id'), primary_key=True)
+    author_id = Column(Integer, ForeignKey('author.id'), primary_key=True)
+    rank = Column(String)
 
-    # bidirectional user/user_keywords relationships, mapping
-    # user_keywords with a dictionary against "special_key" as key.
-    user = relationship(
-        User,
+    # bidirectional book/book_authors relationships, mapping
+    # book_authors with a dictionary against "rank" as key.
+    book = relationship(
+        Book,
         backref=backref(
-            "user_keywords",
-            collection_class=attribute_mapped_collection("special_key"),
+            "book_authors",
+            collection_class=attribute_mapped_collection("rank"),
             cascade="all, delete-orphan"
             )
         )
 
-    keyword = relationship("Keyword")
+    author = relationship("Author")
 
 
-class Keyword(Base):
-    __tablename__ = 'keyword'
+class Author(Base):
+    __tablename__ = 'author'
     id = Column(Integer, primary_key=True)
-    keyword = Column('keyword', String(64))
+    author = Column('author', String(64))
 
-    def __init__(self, keyword):
-        self.keyword = keyword
+    def __init__(self, author):
+        self.author = author
 
     def __repr__(self):
-        return 'Keyword(%s)' % repr(self.keyword)
+        return 'Author(%s)' % repr(self.author)
