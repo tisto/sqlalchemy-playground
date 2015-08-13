@@ -1,4 +1,5 @@
-
+==============================================================================SQLALCHEMY / POSTGRES LARGE BINARY OBJECTS
+==============================================================================
 
 Prerequisits
 ------------
@@ -13,7 +14,7 @@ Set password and grant user db access:
 
   $ psql
   # GRANT ALL PRIVILEGES ON DATABASE test TO test;
-  # ALTER USER test WITH PASSWORD 'test';
+  # ALTER USER dkg WITH PASSWORD 'test';
   # \q
 
 Allow local connections (/etc/postgresql/9.3/main/pg_hba.conf)::
