@@ -1,4 +1,4 @@
-from sqlalchemy import Binary
+from sqlalchemy import LargeBinary
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import Unicode
@@ -19,7 +19,7 @@ class Book(Base):
 
     description = Column(Unicode(255), nullable=False)
 
-    file = Column('file', Binary),
+    file = Column('file', LargeBinary),
 
     def __init__(self, title):
         self.title = title
