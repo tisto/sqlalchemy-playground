@@ -51,3 +51,9 @@ Run example::
 
   $ python sqla.py
 
+Sources
+-------
+
+https://wiki.postgresql.org/wiki/BinaryFilesInDB
+http://www.postgresql.org/docs/current/static/largeobjects.html
+http://hackerchronicles.blogspot.de/2009/10/the-holy-grail-of-binary-data-in.html
