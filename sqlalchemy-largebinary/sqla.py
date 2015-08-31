@@ -45,4 +45,4 @@ if __name__ == '__main__':
     result = session.query(Book).one()
     print(result.title)
     print(result.description)
-    print(result.file)
+    #print(result.file)
