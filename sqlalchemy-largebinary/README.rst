@@ -51,12 +51,3 @@ Run example::
 
   $ python sqla.py
 
-Tests::
-
-  $ py.test
-
-
-Sources
--------
-
-http://lowmanio.co.uk/blog/entries/postgresql-full-text-search-and-sqlalchemy/
