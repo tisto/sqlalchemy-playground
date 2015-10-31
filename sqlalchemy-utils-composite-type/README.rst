@@ -15,3 +15,5 @@ Further reading
 ---------------
 
 http://sqlalchemy-utils.readthedocs.org/en/latest/data_types.html#module-sqlalchemy_utils.types.pg_composite
+
+https://github.com/kvesteri/sqlalchemy-utils/blob/master/tests/types/test_composite.py

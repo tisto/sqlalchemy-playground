@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy_utils import CompositeType
+from sqlalchemy_utils import CompositeArray
 
 Base = declarative_base()
 
@@ -18,14 +19,16 @@ class Person(Base):
 
     name = Column('name', Unicode(255))
 
-    address = Column(
-        CompositeType(
-            'address_type',
-            [
-                Column('street', Unicode),
-                Column('zip', Integer),
-                Column('city', Unicode),
-            ]
+    addresses = Column(
+        CompositeArray(
+            CompositeType(
+                'address_type',
+                [
+                    Column('street', Unicode),
+                    Column('zip', Integer),
+                    Column('city', Unicode),
+                ]
+            )
         )
     )
 
@@ -41,19 +44,27 @@ if __name__ == '__main__':
     # create peron with a single address
     john = Person()
     john.name = u'John'
-    john.address = (
-        u'Examplestreet',
-        53111,
-        u'Bonn'
-    )
-
+    john.addresses = [
+        (
+            u'Examplestreet',
+            53111,
+            u'Bonn'
+        ),
+        (
+            u'Examplestreet',
+            51103,
+            u'Koeln'
+        )
+    ]
     session.add(john)
     session.commit()
 
     # query db
     result = session.query(Person).one()
     print('Person: {}'.format(result.name))
-    print('Address:')
-    print(result.address.street)
-    print(result.address.zip)
-    print(result.address.city)
+    print('Addresses:')
+    for address in result.addresses:
+        print(address.street)
+        print(address.zip)
+        print(address.city)
+        print('')
