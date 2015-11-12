@@ -18,9 +18,8 @@ class Parent(Base):
 
     name = Column('name', Unicode(255))
 
-    child = relationship(
+    children = relationship(
         "Child",
-        uselist=False,
         backref="parent",
         cascade="all, delete, delete-orphan"
     )
@@ -49,22 +48,60 @@ if __name__ == '__main__':
     jane = Child()
     jane.id = 1
     jane.name = u'Jane'
+    jone = Child()
+    jone.id = 2
+    jone.name = u'Jone'
     john = Parent()
     john.id = 1
     john.name = u'John'
-    john.child = jane
+    john.children = [jane, jone]
 
     session.add(john)
     session.commit()
 
     # query db
     result = session.query(Parent).one()
-    print('Parent: {}'.format(result.name))
-    print('Child: {}'.format(result.child.name))
+    print('')
+    print('Parent:')
+    print('- {}'.format(result.name))
+    print('Children:')
+    for child in result.children:
+        print('- {}'.format(child.name))
 
     # delete parent
-    print('Delete John')
+    print('')
+    print('Delete John (Children will be deleted automatically)')
     session.delete(john)
 
     print('# Parents: %s' % session.query(Parent).count())
     print('# Children: %s' % session.query(Child).count())
+
+    print('')
+    print('Bulk Create 100 Parents with 200 Children')
+    bulk = []
+    for i in range(0, 100):
+        jane = Child()
+        jane.id = i
+        jane.name = u'Child {}'.format(i)
+        jone = Child()
+        jone.id = i + 1000
+        jone.name = u'Jone'
+        john = Parent()
+        john.id = i
+        john.name = u'Parent {}'.format(i)
+        john.children = [jane, jone]
+        bulk.append(jane)
+        bulk.append(jone)
+        bulk.append(john)
+    session.bulk_save_objects(bulk)
+    session.commit()
+
+    print('# Parents: {}'.format(session.query(Parent).count()))
+    print('# Children: {}'.format(session.query(Child).count()))
+    
+    print('')
+    print('Bulk Delete 100 Parents')
+    session.query(Parent).delete()
+    session.query(Child).delete()
+    print('# Parents: {}'.format(session.query(Parent).count()))
+    print('# Children: {}'.format(session.query(Child).count()))
